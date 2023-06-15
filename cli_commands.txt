@@ -1,0 +1,35 @@
+Полезные команды (выполняются из директории setuptools_packaging_guide):
+
+python -m pip install --upgrade build
+
+Собрать sdist (source distribution) и bdist (built distribution):
+python -m build
+
+Собрать sdist (source distribution). Включает этап сборки для создания
+метаданных установки из setup.py и/или setup.cfg:
+python -m build --sdist
+
+Собрать bdist (built distribution). При установке не потребуется этап сборки.
+Колесо чистого Python не содержит компилируемых расширений, колесо платформы
+содержит:
+python -m build --wheel
+
+python -m pip install --upgrade pip wheel setuptools
+
+python -m pip install -e .[dev]
+
+python -m pip install dist/useful_project-0.0.1-py3-none-any.whl
+
+python -m pip install --no-index --find-links=dist/ useful-project
+
+python -m pip install useful_project
+
+python -m pip uninstall useful_project -y
+
+source ".env"
+python -m components.useful_project_backend.useful_project.composites.consumer
+
+source "..\..\.env"
+python -m useful_project.composites.consumer
+
+useful_project run

@@ -1,0 +1,57 @@
+# PEP 518 - Определение минимальных требований к системе сборки
+# Система сборки - инструментарий для создания дистрибутивов.
+# В поставку Python входит система сборки distutils, которая использует
+# концепцию файла setup.py: python setup.py install. distutils была единственной
+# зависимостью файла setup.py.
+# Со временем начала набирать обороты система сборки setuptools, которая
+# является надстройкой над distutils, также использует концепцию файла setup.py
+# и не входит в поставку Python. Последнее приводит к уловке 22: мы не можем
+# выполнить setup.py, не зная его зависимостей, которые мы не можем определить,
+# пока не выполним setup.py.
+# Существует несколько решений этой проблемы, например, написание инструкции что
+# нужно установить перед попыткой сборки или установки. Но ни одно решения не
+# является удобным.
+# Это привело к тому, что pip предположил, что setuptools необходим для запуска
+# файла setup.py. Поэтому pip включает в себя setuptools. Однако такое решение
+# не масштабируется, если в будущем начнет набирать популярность другая система
+# сборки.
+# Этот PEP предлагает указывать зависимости сборки проекта в конкретном файле -
+# pyproject.toml, чтобы такие инструменты, как pip, могли убедиться, что они
+# установлены перед тем, как запускать сборку проекта.
+[build-system]
+# В этом блоке перечислены минимальные требования для запуска системы сборки.
+# Только один ключ обязательный: requires.
+# Файл pyproject.toml может отсутствовать или не иметь данного блока, но если он
+# содержит данный блок, то ключ requires должен быть указан.
+# Если файл pyproject.toml отсутствует или не имеет данного блока, следует
+# использовать значения по умолчанию, как приведено ниже.
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.isort]
+profile = "black"
+known_first_party = "useful_project"
+sections=["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+line_length = 80
+
+[tool.yapf]
+based_on_style = "pep8"
+spaces_before_comment = 2
+column_limit = 80
+allow_split_before_dict_value = false
+dedent_closing_brackets = true
+split_complex_comprehension = true
+split_arguments_when_comma_terminated = true
+blank_line_before_nested_class_or_def = true
+
+split_before_dict_set_generator = true
+split_before_first_argument = true
+split_before_arithmetic_operator = true
+split_before_logical_operator = true
+split_before_bitwise_operator = true
+
+[tool.flake8]
+# В блоке tool.$NAME может быть описана конфигурация любого инструмента,
+# связанного проектом, а не только инструмента сборки.
+# $NAME - запись, которая принадлежит проекту в PyPI.
+max-line-length = 80
